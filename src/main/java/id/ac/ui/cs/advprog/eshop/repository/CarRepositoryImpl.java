@@ -6,7 +6,7 @@ import java.util.List;
 
 @Repository
 public class CarRepositoryImpl implements CarRepository {
-    private List<Car> carData = new ArrayList<>();
+    private final List<Car> carData = new ArrayList<>();
 
     public Car create(Car car) {
         carData.add(car);
@@ -27,8 +27,7 @@ public class CarRepositoryImpl implements CarRepository {
     }
 
     public Car update(String id, Car updatedCar) {
-        for (int i = 0; i < carData.size(); i++) {
-            Car car = carData.get(i);
+        for (Car car : carData) {
             if (car.getCarId().equals(id)) {
                 car.setCarName(updatedCar.getCarName());
                 car.setCarColor(updatedCar.getCarColor());
