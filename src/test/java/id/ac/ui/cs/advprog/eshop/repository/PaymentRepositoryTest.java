@@ -1,9 +1,10 @@
-package repository;
+package id.ac.ui.cs.advprog.eshop.repository;
 
+import id.ac.ui.cs.advprog.eshop.enums.PaymentMethod;
+import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
 import id.ac.ui.cs.advprog.eshop.model.Order;
 import id.ac.ui.cs.advprog.eshop.model.Payment;
 import id.ac.ui.cs.advprog.eshop.model.Product;
-import id.ac.ui.cs.advprog.eshop.repository.PaymentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -37,12 +38,12 @@ class PaymentRepositoryTest {
 
         Map<String, String> paymentData1 = new HashMap<>();
         paymentData1.put("voucherCode", "ESHOP1234ABC5678");
-        payments.add(new Payment("pay-001", "VOUCHER_CODE", order, paymentData1));
+        payments.add(new Payment("pay-001", PaymentMethod.VOUCHER_CODE.getValue(), order, paymentData1));
 
         Map<String, String> paymentData2 = new HashMap<>();
         paymentData2.put("address", "Jl. Margonda No. 1");
         paymentData2.put("deliveryFee", "5000");
-        payments.add(new Payment("pay-002", "CASH_ON_DELIVERY", order, paymentData2));
+        payments.add(new Payment("pay-002", PaymentMethod.CASH_ON_DELIVERY.getValue(), order, paymentData2));
     }
 
     @Test
@@ -53,8 +54,8 @@ class PaymentRepositoryTest {
         Payment findResult = paymentRepository.findById(payment.getId());
         assertEquals(payment.getId(), result.getId());
         assertEquals(payment.getId(), findResult.getId());
-        assertEquals(payment.getMethod(), findResult.getMethod());
-        assertEquals(payment.getStatus(), findResult.getStatus());
+        assertEquals(PaymentMethod.VOUCHER_CODE.getValue(), findResult.getMethod());
+        assertEquals(PaymentStatus.SUCCESS.getValue(), findResult.getStatus());
     }
 
     @Test
@@ -62,16 +63,15 @@ class PaymentRepositoryTest {
         Payment payment = payments.get(0);
         paymentRepository.save(payment);
 
-        // simulate a status update by saving a new object with same id
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("voucherCode", "ESHOP1234ABC5678");
-        Payment updatedPayment = new Payment(payment.getId(), "VOUCHER_CODE", order, paymentData);
+        Payment updatedPayment = new Payment(payment.getId(), PaymentMethod.VOUCHER_CODE.getValue(), order, paymentData);
         Payment result = paymentRepository.save(updatedPayment);
 
         Payment findResult = paymentRepository.findById(payment.getId());
         assertEquals(1, paymentRepository.findAll().size());
         assertEquals(payment.getId(), findResult.getId());
-        assertEquals(result.getStatus(), findResult.getStatus());
+        assertEquals(PaymentStatus.SUCCESS.getValue(), findResult.getStatus());
     }
 
     @Test
@@ -81,6 +81,7 @@ class PaymentRepositoryTest {
         }
         Payment findResult = paymentRepository.findById("pay-001");
         assertEquals("pay-001", findResult.getId());
+        assertEquals(PaymentMethod.VOUCHER_CODE.getValue(), findResult.getMethod());
     }
 
     @Test
