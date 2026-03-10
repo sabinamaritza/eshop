@@ -1,6 +1,9 @@
 package id.ac.ui.cs.advprog.eshop.model;
 
+import id.ac.ui.cs.advprog.eshop.enums.PaymentMethod;
+import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
 import lombok.Getter;
+
 import java.util.Map;
 
 @Getter
@@ -24,28 +27,28 @@ public class Payment {
     }
 
     private String determineStatus(String method, Map<String, String> paymentData) {
-        if (method.equals("VOUCHER_CODE")) {
+        if (method.equals(PaymentMethod.VOUCHER_CODE.getValue())) {
             return validateVoucherCode(paymentData.get("voucherCode"));
-        } else if (method.equals("CASH_ON_DELIVERY")) {
+        } else if (method.equals(PaymentMethod.CASH_ON_DELIVERY.getValue())) {
             return validateCOD(paymentData);
         }
-        return "WAITING_PAYMENT";
+        return PaymentStatus.WAITING_PAYMENT.getValue();
     }
 
     private String validateVoucherCode(String voucherCode) {
         if (voucherCode == null || voucherCode.length() != 16) {
-            return "REJECTED";
+            return PaymentStatus.REJECTED.getValue();
         }
         if (!voucherCode.startsWith("ESHOP")) {
-            return "REJECTED";
+            return PaymentStatus.REJECTED.getValue();
         }
         long digitCount = voucherCode.chars()
                 .filter(Character::isDigit)
                 .count();
         if (digitCount != 8) {
-            return "REJECTED";
+            return PaymentStatus.REJECTED.getValue();
         }
-        return "SUCCESS";
+        return PaymentStatus.SUCCESS.getValue();
     }
 
     private String validateCOD(Map<String, String> paymentData) {
@@ -53,8 +56,8 @@ public class Payment {
         String deliveryFee = paymentData.get("deliveryFee");
         if (address == null || address.isEmpty() ||
                 deliveryFee == null || deliveryFee.isEmpty()) {
-            return "REJECTED";
+            return PaymentStatus.REJECTED.getValue();
         }
-        return "WAITING_PAYMENT";
+        return PaymentStatus.WAITING_PAYMENT.getValue();
     }
 }
