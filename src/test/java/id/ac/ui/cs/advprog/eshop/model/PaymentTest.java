@@ -1,5 +1,7 @@
 package id.ac.ui.cs.advprog.eshop.model;
 
+import id.ac.ui.cs.advprog.eshop.enums.PaymentMethod;
+import id.ac.ui.cs.advprog.eshop.enums.PaymentStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -32,11 +34,11 @@ class PaymentTest {
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("voucherCode", "ESHOP1234ABC5678");
 
-        Payment payment = new Payment("pay-001", "VOUCHER_CODE", order, paymentData);
+        Payment payment = new Payment("pay-001", PaymentMethod.VOUCHER_CODE.getValue(), order, paymentData);
 
         assertEquals("pay-001", payment.getId());
-        assertEquals("VOUCHER_CODE", payment.getMethod());
-        assertEquals("SUCCESS", payment.getStatus());
+        assertEquals(PaymentMethod.VOUCHER_CODE.getValue(), payment.getMethod());
+        assertEquals(PaymentStatus.SUCCESS.getValue(), payment.getStatus());
         assertEquals(paymentData, payment.getPaymentData());
     }
 
@@ -45,9 +47,9 @@ class PaymentTest {
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("voucherCode", "ESHOP123ABC");
 
-        Payment payment = new Payment("pay-002", "VOUCHER_CODE", order, paymentData);
+        Payment payment = new Payment("pay-002", PaymentMethod.VOUCHER_CODE.getValue(), order, paymentData);
 
-        assertEquals("REJECTED", payment.getStatus());
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
     }
 
     @Test
@@ -55,19 +57,19 @@ class PaymentTest {
         Map<String, String> paymentData = new HashMap<>();
         paymentData.put("voucherCode", "XSHOP1234ABC5678");
 
-        Payment payment = new Payment("pay-003", "VOUCHER_CODE", order, paymentData);
+        Payment payment = new Payment("pay-003", PaymentMethod.VOUCHER_CODE.getValue(), order, paymentData);
 
-        assertEquals("REJECTED", payment.getStatus());
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
     }
 
     @Test
     void testCreatePaymentVoucherCodeRejectedNot8Digits() {
         Map<String, String> paymentData = new HashMap<>();
-        paymentData.put("voucherCode", "ESHOPABCDEFGHIJK"); // no digits
+        paymentData.put("voucherCode", "ESHOPABCDEFGHIJK");
 
-        Payment payment = new Payment("pay-004", "VOUCHER_CODE", order, paymentData);
+        Payment payment = new Payment("pay-004", PaymentMethod.VOUCHER_CODE.getValue(), order, paymentData);
 
-        assertEquals("REJECTED", payment.getStatus());
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
     }
 
     @Test
@@ -76,9 +78,9 @@ class PaymentTest {
         paymentData.put("address", "Jl. Margonda Raya No. 100");
         paymentData.put("deliveryFee", "10000");
 
-        Payment payment = new Payment("pay-005", "CASH_ON_DELIVERY", order, paymentData);
+        Payment payment = new Payment("pay-005", PaymentMethod.CASH_ON_DELIVERY.getValue(), order, paymentData);
 
-        assertEquals("WAITING_PAYMENT", payment.getStatus());
+        assertEquals(PaymentStatus.WAITING_PAYMENT.getValue(), payment.getStatus());
     }
 
     @Test
@@ -87,9 +89,9 @@ class PaymentTest {
         paymentData.put("address", "");
         paymentData.put("deliveryFee", "10000");
 
-        Payment payment = new Payment("pay-006", "CASH_ON_DELIVERY", order, paymentData);
+        Payment payment = new Payment("pay-006", PaymentMethod.CASH_ON_DELIVERY.getValue(), order, paymentData);
 
-        assertEquals("REJECTED", payment.getStatus());
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
     }
 
     @Test
@@ -98,9 +100,9 @@ class PaymentTest {
         paymentData.put("address", null);
         paymentData.put("deliveryFee", "10000");
 
-        Payment payment = new Payment("pay-007", "CASH_ON_DELIVERY", order, paymentData);
+        Payment payment = new Payment("pay-007", PaymentMethod.CASH_ON_DELIVERY.getValue(), order, paymentData);
 
-        assertEquals("REJECTED", payment.getStatus());
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
     }
 
     @Test
@@ -109,9 +111,9 @@ class PaymentTest {
         paymentData.put("address", "Jl. Margonda Raya No. 100");
         paymentData.put("deliveryFee", "");
 
-        Payment payment = new Payment("pay-008", "CASH_ON_DELIVERY", order, paymentData);
+        Payment payment = new Payment("pay-008", PaymentMethod.CASH_ON_DELIVERY.getValue(), order, paymentData);
 
-        assertEquals("REJECTED", payment.getStatus());
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
     }
 
     @Test
@@ -120,8 +122,8 @@ class PaymentTest {
         paymentData.put("address", "Jl. Margonda Raya No. 100");
         paymentData.put("deliveryFee", null);
 
-        Payment payment = new Payment("pay-009", "CASH_ON_DELIVERY", order, paymentData);
+        Payment payment = new Payment("pay-009", PaymentMethod.CASH_ON_DELIVERY.getValue(), order, paymentData);
 
-        assertEquals("REJECTED", payment.getStatus());
+        assertEquals(PaymentStatus.REJECTED.getValue(), payment.getStatus());
     }
 }
